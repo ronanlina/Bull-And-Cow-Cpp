@@ -28,11 +28,12 @@ public:
 	EGuessStatus CheckGuessValidity(FString) const;
 
 	void Reset();
-	FBullCowCount SubmitGuess(FString);
+	FBullCowCount SubmitValidGuess(FString);
 
 private:
+	bool	bGameWon;
 	int32  MyCurrentTry = 1;
-	int32 MyMaxTries = 5;
 	FString MyHiddenWord;
-	bool IsIsogram(FString);
+	bool IsIsogram(FString) const;
+	bool IsLowerCase(FString) const;
 };

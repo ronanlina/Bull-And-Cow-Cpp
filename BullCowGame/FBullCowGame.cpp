@@ -1,5 +1,9 @@
+#pragma once
 #include<stdlib.h>
+#include<map>
 #include "FBullCowGame.h"
+
+#define TMap std::map
 
 FBullCowGame::FBullCowGame() 
 {
@@ -7,18 +11,18 @@ FBullCowGame::FBullCowGame()
 }
 void FBullCowGame::Reset()
 {	
-	constexpr int32 MAX_TRIES = 8;
-	const FString HIDDEN_WORD = "planet";
-
-	MyMaxTries = MAX_TRIES;
+	const FString HIDDEN_WORD = "hey";
 	MyHiddenWord = HIDDEN_WORD;
 	MyCurrentTry = 1;
+	bGameWon = false;
 	return;
 }
 
 int32 FBullCowGame::GetMaxTries() const
 {
-	return MyMaxTries;
+	TMap<int32, int32> WordLengthToMaxTries{ {3,5}, {4,7}, {5,9}, {6,11} };
+	
+	return WordLengthToMaxTries[MyHiddenWord.length()];
 }
 
 int32 FBullCowGame::GetCurrentTry() const
@@ -32,17 +36,17 @@ int32 FBullCowGame::GetHiddenWordLength() const
 }
 
 bool FBullCowGame::IsGameWon() const
-{
-	return false;
+{	
+	return bGameWon;
 }
 
 EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 {	
-	if (false)
+	if (!IsIsogram(Guess))
 	{
 		return EGuessStatus::Not_Isogram;
 	}
-	else if (false)
+	else if (!IsLowerCase(Guess))
 	{
 		return EGuessStatus::Not_Lowercase;
 	}
@@ -56,7 +60,7 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 	}
 }
 
-FBullCowCount FBullCowGame::SubmitGuess(FString Guess)
+FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 {	
 	MyCurrentTry++;
 
@@ -81,22 +85,47 @@ FBullCowCount FBullCowGame::SubmitGuess(FString Guess)
 			}
 		}
 	}
-
+	if (BullCowCount.Bulls == GetHiddenWordLength())
+	{
+		bGameWon = true;
+	}
+	else
+	{
+		bGameWon = false;
+	}
 	return BullCowCount;
 }
 
-bool FBullCowGame::IsIsogram(FString Guess)
+bool FBullCowGame::IsIsogram(FString Guess) const
 {
-	/*for (int i = 0; i < Guess.length(); i++)
+	if (Guess.length() < 2)
 	{
-		for (int j = 0; j < Guess.length(); j++)
+		return true;
+	}
+	TMap<char, bool> LetterSeen; //setup map
+	for (auto Letter : Guess)
+	{
+		Letter = tolower(Letter); // handle mixed case
+		if (LetterSeen[Letter]) // if the letter is in the map
 		{
-			if (Guess[i] == Guess[j])
-			{
-				return false;
-			}
+			return false; // no isogram
 		}
-	}*/
+		else
+		{
+			LetterSeen[Letter] = true; // add letter to the map as seen
+		}
+	}
+	return true;
+}
 
+bool FBullCowGame::IsLowerCase(FString Guess) const
+{
+	for (auto Letter : Guess)
+	{
+		if (!islower(Letter)) 
+		{
+			return false;
+		}
+	}
 	return true;
 }
