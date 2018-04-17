@@ -9,17 +9,25 @@ struct FBullCowCount {
 	int32 Cows = 0;
 };
 
+enum EGuessStatus {
+	Invalid_Status,
+	OK,
+	Not_Isogram,
+	Wrong_Length,
+	Not_Lowercase		//either add 'Not_Lowercase' here or use tolower() on input
+};
+
 class FBullCowGame {
 public:
 	FBullCowGame();
 
 	int32 GetMaxTries() const;	
 	int32 GetCurrentTry() const;
+	int32 GetHiddenWordLength() const;
 	bool IsGameWon() const;
+	EGuessStatus CheckGuessValidity(FString) const;
 
 	void Reset();
-	bool CheckGuessValidity(FString);
-
 	FBullCowCount SubmitGuess(FString);
 
 private:
