@@ -33,7 +33,7 @@ void PrintIntro() {
 	std::cout << std::endl;
 	return;
 }
-
+//
 void PlayGame()
 {		
 	BCGame.Reset();
@@ -52,7 +52,7 @@ void PlayGame()
 		std::cout << "Cows = " << BullCowCount.Cows << "\t\n";
 	}
 }
-//
+
 FText GetGuess() {
 	std::cout << "Enter your guess : ";
 	FText Guess = "";
